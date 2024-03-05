@@ -10,6 +10,8 @@ const Counter = () => {
   const [count, setCount] = useState(0);
   const [incrementalClicks, setIncrementalClicks] = useState(0);
   const [decrementalClicks, setDecrementalClicks] = useState(0);
+  const [timeInput, setTimeInput] = useState("");
+  const [timer, setTimer] = useState(null);
 
   useEffect(() => {
     const incrementClicksFromStorage = localStorage.getItem("incrementClicks");
@@ -49,6 +51,24 @@ const Counter = () => {
     setCount(0);
   };
 
+  const handleTimer = (e) => {
+    e.preventDefault();
+    const val = parseInt(timeInput);
+    if (!isNaN(val) && val > 0) {
+      setTimeInput("");
+      if (timer === null) {
+        setTimeout(() => {
+          setCount((prev) => prev + 1);
+          setTimer(null);
+        }, val * 1000);
+      }
+    }
+  };
+
+  const handleInput = (e) => {
+    setTimeInput(e.target.value);
+  };
+
   return (
     <>
       <Container
@@ -76,6 +96,10 @@ const Counter = () => {
               <IconButton aria-label="reset" onClick={reset}>
                 <RestartAltIcon sx={{ height: 38, width: 38 }} />
               </IconButton>
+            </Grid>
+            <Grid item xs={12}>
+              <input type="text" name="timer" value={timeInput} onChange={handleInput} />
+              <button onClick={handleTimer}>Add timer</button>
             </Grid>
           </Grid>
         </Paper>
